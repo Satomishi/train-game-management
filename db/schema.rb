@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_30_100142) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_30_101238) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "bookmarks", force: :cascade do |t|
+    t.bigint "collection_id", null: false
+    t.bigint "game_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_bookmarks_on_collection_id"
+    t.index ["game_id"], name: "index_bookmarks_on_game_id"
+  end
 
   create_table "collections", force: :cascade do |t|
     t.string "name"
@@ -21,6 +30,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_100142) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_collections_on_user_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "player_min"
+    t.integer "player_max"
+    t.integer "avg_time"
+    t.string "editor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -35,5 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_30_100142) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "bookmarks", "collections"
+  add_foreign_key "bookmarks", "games"
   add_foreign_key "collections", "users"
 end
